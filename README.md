@@ -1,5 +1,5 @@
 # Hello-CFD
-Coding practice for me, a beginner of CFD.
+I am a beginner of CFD Coding. Here, I store some code for practice and learn. 
 
 # How to use git and push to github
 basic command
