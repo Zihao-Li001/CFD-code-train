@@ -69,7 +69,7 @@ void initialsolve()
   }
   printf("x=%f,rho=%f,u=%f,p=%f\n",
   cell[i].xc,cell[i].U[0],cell[i].U[1],cell[i].U[2]);
-  getchar();
+//  getchar();
 };
 
 // boundarycondition: Dummy Cell Method 
@@ -256,11 +256,12 @@ void SolveNextstep(double ar[],int ir)
   }
 }
 
-//Runge-Kutta 
+//Runge-Kutta method 
 void SolveRungeKutta()
 {
+  //
   double ar[4]={1/4.0, 1/3.0, 0.5, 1.0};
-
+  
   int it,ir;
   timesum = 0.0;
   for(it=0;;it++)
@@ -276,8 +277,8 @@ void SolveRungeKutta()
     if(timesum>=0.16)
     {
       output();
-      getchar();
       printf("Please enter any key to continue...");
+      getchar();
       break;
     }
   }
@@ -285,56 +286,49 @@ void SolveRungeKutta()
 
 void output()
 {
-  int i;
-  FILE *fpd,*fpu,*fpp;
-  if((fpd=fopen("Density.plt","w"))==NULL)
-  {
-    printf("connot open infile");
-    return;
+     int i;
+     FILE *fpd,*fpu,*fpp;
 
-    }
+     // open density file
+     if((fpd=fopen("Density.plt","w"))==NULL)
+     {
+    	printf("connot open infile");
+    	return;
 
+     }	    
     fprintf(fpd,"TITLE = \"TestCase\"n");
-
     fprintf(fpd,"VARIABLES = \"x\", \"density\"n");
-
     fprintf(fpd,"ZONE T=\"Only Zone\", I=%d, F=POINTN",Nc);
 
+    // open pressure file
     if((fpp=fopen("Pressure.plt","w"))==NULL)
     {
         printf("connot open infile");
         return;
     }
-
     fprintf(fpp,"TITLE = \"TestCase\"n");
-
     fprintf(fpp,"VARIABLES = \"x\", \"pressure\"n");
-
     fprintf(fpp,"ZONE T=\"Only Zone\", I=%d, F=POINTN",Nc);
 
+    // open velocity file
     if((fpu=fopen("Velocity.plt","w"))==NULL)
     {
         printf("connot open infile");
         return;
     }
-
     fprintf(fpu,"TITLE = \"TestCase\"n");
-
     fprintf(fpu,"VARIABLES = \"x\", \"velocity\"n");
-
     fprintf(fpu,"ZONE T=\"Only Zone\", I=%d, F=POINTN",Nc);
 
     for(i=0;i<Nc;i++)
     {
         fprintf(fpd,"%f %fn",cell[i].xc,cell[i].U[0]);
-
         fprintf(fpu,"%f %fn",cell[i].xc,cell[i].U[1]);
-
         fprintf(fpp,"%f %fn",cell[i].xc,cell[i].U[2]);
     
         printf("x=%f,d=%f,u=%f,p=%f\n",cell[i].xc,cell[i].U[0],cell[i].U[1],cell[i].U[2]);
         
-        getchar();
+    //    getchar();
     }
     fclose(fpd);
 
