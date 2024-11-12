@@ -1,0 +1,9 @@
+EXE_INC = \
+    -I/home/lzh/OpenFOAM/libtorch/include \
+    -I/home/lzh/OpenFOAM/libtorch/include/torch/csrc/api/include 
+
+EXE_LIBS = \
+    -L/home/lzh/OpenFOAM/libtorch/lib \
+    -ltorch \
+    -lc10
+    

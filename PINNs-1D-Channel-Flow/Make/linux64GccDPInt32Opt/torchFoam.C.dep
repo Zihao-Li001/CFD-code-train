@@ -1,0 +1,5 @@
+$(OBJECTS_DIR)/torchFoam.C.dep: \
+torchFoam.C \
+output.H \
+
+#END

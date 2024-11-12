@@ -19,3 +19,7 @@ This code comes from 胡偶 2011 to understand how to convert the theory into co
 > * restruction       : MUSCL 
 > * restrictor        :	Van Albada
 > * time discrete     :	4-step Runge-Kutta
+
+# 2. PINNs: 1D channel flow example
+This code comes from dyFluid. [website](http://dyfluid.com/pinn.html)
+The environment of OpenFOAM libtorch is needed here.
