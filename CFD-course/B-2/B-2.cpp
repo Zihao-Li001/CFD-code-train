@@ -12,42 +12,26 @@ int main()
     // define \delta x
     double h[3] ={0.1,0.05,0.0025}; 
     double u[3];
-    double dudx1,dudx2;
-    double Error1[3],Error2[3];
+    double dudx;
+    double Error[3];
 ////////////////////////////////
-//      x-1    x    x+1       //
-//       0     1     2        //
+//       x    x+1    x+2       //
+//       0     1      2        //
 ////////////////////////////////
     double x = 1.0;
 
-    //1st upwind scheme
-    //double upwind[3]={0.0};
+    //3-rd order upwind scheme
     for(int i=0;i<3;i++)
     {
-        u[0] = exp(x-h[i])*sin(x-h[i]);
-        u[1] = exp(x)*sin(x);
-        dudx1 = (u[1]-u[0])/h[i];
+        u[0] = exp(x)*sin(x);
+        u[1] = exp(x+h[i])*sin(x+h[i]);
+        u[2] = exp(x+2*h[i])*sin(x+2*h[i]);
+        dudx = (-3*u[0]+4*u[1]-u[2])/(2*h[i]);
         // Calculate Error
-        Error1[i] = abs(
-            (dudx1-theo)
+        Error[i] = abs(
+            (dudx-theo)
         );
-        printf("Δx = %f, 1st-order upwind error is %.8f\n",h[i],Error1[i]);
-    }
-    std::cin.get();
-
-    //2nd central scheme
-    for(int i=0;i<3;i++)
-    {
-        u[0] = exp(x-h[i])*sin(x-h[i]);
-        // u[1] = exp(x)*sin(x);
-        u[2] = exp(x+h[i])*sin(x+h[i]);
-        dudx2 = (u[2]-u[0])/(2.0*h[i]);
-        // Calculate Error
-        Error2[i] = abs(
-            (dudx2-theo)
-        );
-        printf("Δx = %f, 2nd-order central error is %.8f\n",h[i],Error2[i]);
-
+        printf("Δx = %f, 1st-order upwind error is %.8f\n",h[i],Error[i]);
     }
     std::cin.get();
 
