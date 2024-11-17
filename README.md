@@ -9,6 +9,8 @@ git status
 git diff
 git add .
 git commit -m "xxxx"
+
+git quick use https://www.bootcss.com/p/git-guide/
 ```
 reference:https://liaoxuefeng.com/books/git/remote/add-remote/index.html
 
