@@ -1,39 +1,57 @@
 #include <iostream>
 #include <math.h>
 
-#define Nc 12  // cell number
-#define It 2  // iteration number
+const int dt = 1;  // time step
+const int N_step = 100;
 
-int dt = 1;  // time step
-double dx = 1.0/3.0;  // cell size in X direction
-double dy = 1.0/2.0;  // cell size in Y direction
-
-// cell structer
-
-
-//        
-//
-struct cell
+typedef struct
 {   
     int flag;
-    double U[2];
-};
-struct cell cell[Nc];
-int Nx = 4;
-int Cellx=4, Celly=3;
-// int i,j=0 // Nc = Nx*j +i
+    int N_X=4;
+    int N_Y=3;
+    double l_x,l_y; // length of x, y
+    double dx;  // cell size in X direction
+    double dy;  // cell size in Y direction   
+    double V[2]; //convection velocity
+    double* u; // varibles [DOF]
+    double** x; // position [DOF][2]
+    double ALPHA = 1.0;
+}CALC_POINTS;
 
-void initialsolve()
+typedef struct{
+    double** mat;
+    double*  rhs;
+}LIN_SYS;
+
+void initialize(CALC_POINTS* points, int n_x, int n_y, double l_x, double l_y)
 {
-    for(int i=0;i<Nc;i++)
+    points->N_X = n_x;
+    points->N_Y = n_y;
+    points->l_x =  l_x;
+    points->l_y =  l_y;
+    points->dx  =   l_x / (n_x);
+    points->dy  =   l_y / (n_y);
+    points->ALPHA   =   1.0;
+    points->V[0]    =   1.0;
+    points->V[1]    =   1.0;
+
+    int DOF = n_x * n_y;
+
+    points->x   =   (double**)malloc(DOF * sizeof(double*));
+    for (int i=0;i<DOF;i++)
     {
-        if(i==5||i==6) 
-            cell[i].flag = 1;  // point 6 or 7
-        else 
-            cell[i].flag = 0;  // boundary
-        cell[i].U[0] = 0;   // u
-        cell[i].U[1] = 0;   // v
+        points->x[i]    =   (double*)malloc(2 * sizeof(double));
     }
+
+    // for(int i=0;i<Nc;i++)
+    //     {
+    //         if(i==5||i==6) 
+    //             cell[i].flag = 1;  // point 6 or 7
+    //         else 
+    //             cell[i].flag = 0;  // boundary
+    //         cell[i].U[0] = 0;   // u
+    //         cell[i].U[1] = 0;   // v
+    //     }
 };
 
 void SetMesh()
