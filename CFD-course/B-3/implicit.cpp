@@ -3,13 +3,13 @@
 #include <math.h>
 
 const int n_step = 100;  //number of iteration
-const int n_x = 31;      //point number of x
-const int n_y = 31;      //              of y
+const int n_x = 4;      //point number of x
+const int n_y = 3;      //              of y
 const double l_x = 1.0;  // lenth of x
 const double l_y = 1.0;   //          y
 const double alpha = 1.0; // diffusion coefficience
 const double v[2] = {1.0, 1.0};     // convection velocity
-const double dt = 0.1;      // time step
+const double dt = 1;      // time step
 const double SOURCE_TERM = 1.0; //source term
 static const int max_iteration = 10000; //maxmium iteration
 static const double EPSILON = 1e-7;
@@ -272,6 +272,9 @@ int main(
         set_bc(&points, &ls);
         mat_solve(points.u,&ls,max_iteration,n_x*n_y);
         write_vtk(&points, n);
+	if( n == 1){
+		printf("point(6) u: %f\n point(7)u: %f", points.u[5],points.u[6]);
+	}
     };
 
     memory_free(&points,&ls,n_x*n_y);

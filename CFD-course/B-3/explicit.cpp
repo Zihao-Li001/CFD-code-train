@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const int dt = 1;  // time step
+const int dt = 0.0001;  // time step
 const int t_step = 2;
 const double SOURCE_TERM = 1.0;
 
