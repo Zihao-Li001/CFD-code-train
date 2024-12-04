@@ -15,7 +15,7 @@
 #include <math.h>
 #include <string.h>
 
-#define h (1/400.0)  // mesh step
+#define h (1/400.0)  // mesh size
 #define Nc 404  // total mesh number; h = 1/h +4
 #define PI 3.1415927
 #define It 1000
@@ -50,6 +50,8 @@ void initialsolve()
   double x,xi,xe;
   XS1=-0.0;
   XS2=1.0;
+
+  // 网格划分，包括两边的dummy网格
   xi = XS1 - 2*h;
   xe = XS2 + 2*h;
   for(i=0;i<Nc;i++)
@@ -59,7 +61,9 @@ void initialsolve()
     x = cell[i].xc;
     if(x<0.5)
     {
-      cell[i].U[0]=0.445; cell[i].U[1]=0.698;cell[i].U[2]=3.528;
+        cell[i].U[0] = 0.445; // 密度
+        cell[i].U[1] = 0.698; // 速度
+        cell[i].U[2] = 3.528; // 压强
     }
     else
     {
@@ -104,11 +108,14 @@ void SolveReconstruction(double Um1[],double UI[],double Up1[],double Up2[],doub
    epsilon = 1.0e-5*h;
   for(i=0;i<3;i++)
   {
-    aR[i] = Up2[i] - Up1[i]; //dealta + U(I+1)
+     // 差分计算
+    aR[i] = Up2[i] - Up1[i]; //delta + U(I+1)
     bR[i] = Up1[i] - UI[i];
     aL[i] = Up1[i] - UI[i];
     bL[i] = UI[i] - Um1[i];
   }
+
+  // 使用 Van Albada 限制器，避免震荡
   for(i=1;i<3;i++)
   {
     sR[i] = (2.0*aR[i]*bR[i] + 1.0e-6)/(aR[i]*aR[i]+bR[i]*bR[i] + 1.0e-6);
@@ -151,15 +158,15 @@ void SolveAUSMFlux(double UL[],double UR[],double Fc[])
   SolveUtoW(WR,UR);
   
   PL = UL[2]; //calc pressure at left cell
-  cl = sqrt(gama *PL/UL[0]);
+  cl = sqrt(gama *PL/UL[0]);  // 左侧声速：c = sqrt(γ * p / ρ)
 
   PR = UR[2]; //calc pressure at right cell
-  cr = sqrt(gama *PR/UR[0]);
+  cr = sqrt(gama *PR/UR[0]);  // 右侧声速
 
-  ML = UL[1]/cl;
+  ML = UL[1]/cl;  // 左侧无量纲流速
   MR = UR[1]/cr;
 
-  //  calcu Ml && pl
+  //  calcu Ml && pl, according to flow velocity and direction
   if(ML>=1.0)
   {
     Ml = ML;
