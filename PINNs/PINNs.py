@@ -5,11 +5,13 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 
+# define function for save picture
 def save_gif_PIL(outfile, files, fps=5, loop=0):
     "Helper function for saving GIFs"
     imgs = [Image.open(file) for file in files]
     imgs[0].save(fp=outfile, format='GIF', append_images=imgs[1:], save_all=True, duration=int(1000/fps), loop=loop)
-    
+
+# Get the exact solution. It will be used as train data
 def oscillator(d, w0, x):
     """Defines the analytical solution to the 1D underdamped harmonic oscillator problem. 
     Equations taken from: https://beltoforion.de/en/harmonic_oscillator/"""
@@ -17,17 +19,19 @@ def oscillator(d, w0, x):
     w = np.sqrt(w0**2-d**2)
     phi = np.arctan(-d/w)
     A = 1/(2*np.cos(phi))
-    cos = torch.cos(phi+w*x)
+    cos = torch.cos(phi+w*x)  # automative differention of Pytorch library
     sin = torch.sin(phi+w*x)
     exp = torch.exp(-d*x)
     y  = exp*2*A*cos
     return y
 
+# define a fully connected network
 class FCN(nn.Module):
     "Defines a connected network"
-    
+
+    # At here "self" is important. It means 
     def __init__(self, N_INPUT, N_OUTPUT, N_HIDDEN, N_LAYERS):
-        super().__init__()
+        super().__init__()  # 继承父类的构造函数
         activation = nn.Tanh
         self.fcs = nn.Sequential(*[
                         nn.Linear(N_INPUT, N_HIDDEN),
